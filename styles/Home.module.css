@@ -79,7 +79,8 @@
 }
 
 .card {
-  margin: 1rem;
+  margin: auto;
+  margin-top: 2rem;
   padding: 1.5rem;
   text-align: left;
   color: inherit;
@@ -87,14 +88,13 @@
   border: 1px solid #eaeaea;
   border-radius: 10px;
   transition: color 0.15s ease, border-color 0.15s ease;
-  width: 45%;
+  width: 65%;
 }
 
 .card:hover,
 .card:focus,
 .card:active {
-  color: #0070f3;
-  border-color: #0070f3;
+  border-color: #b8b8b8;
 }
 
 .card h2 {
@@ -111,6 +111,38 @@
 .logo {
   height: 1em;
   margin-left: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.connectAccount {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0rem 1.5rem;
+    border: 1px solid #1DA1F2;
+    background: #1DA1F2;
+    border-radius: 0.2rem;
+    cursor: pointer;
+    margin-top: 2rem;
+}
+
+.connectAccount p {
+  font-size: 0.9rem;
+  color: #fff;
+}
+
+.verificationButton span{
+  display: flex;
+  align-items: center;
+}
+
+.verificationButton img{
+  margin-right: 0.5rem;
+}
+
+.errorMessage {
+  font-size: 1rem !important;
+  margin-top: 1rem !important;
 }
 
 @media (max-width: 600px) {

@@ -1,3 +1,4 @@
+import React, { useState } from 'react';
 import Head from 'next/head'
 import Image from 'next/image'
 import { signIn, signOut, useSession, getSession } from 'next-auth/client';
@@ -5,7 +6,41 @@ import { signIn, signOut, useSession, getSession } from 'next-auth/client';
 import styles from '../styles/Home.module.css'
 
 export default function Home({ session }) {
+
+  const [isChecked, setIsChecked] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [accountVerified, setAccountVerified] = useState(false);
+  const [errorVerification, setErrorVerification] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
   // const [session] = useSession();
+  console.log(session);
+
+  const handleCheckboxChange = (event) => {
+    setIsChecked(event.target.checked);
+  };
+
+  const handleSubmitVerification = () => {
+    // Replace this with your logic to submit the verification request to your backend
+    // Here, you can send the verification details and handle the verification process.
+    console.log('Verification submitted!');
+
+    setLoading(true);
+
+    setTimeout(() => {
+
+      // success
+      setLoading(false);
+      setAccountVerified(true);
+
+      // error
+      /*
+      setLoading(false);
+      setErrorVerification(true);
+      setErrorMessage('No se pudo verificar la cuenta, verifica haber iniciado sesión con la cuenta correcta y intenta nuevamente.');
+      */
+    }, 5000);
+  };
+
   return (
     <div className={styles.container}>
       <Head>
@@ -16,60 +51,87 @@ export default function Home({ session }) {
 
       <main className={styles.main}>
         <h1 className={styles.title}>
-          Welcome { session ? session.user.name : 'to Next.js' }
+          Bienvenido { session ? session.user.name : 'a Manifiesto Twitter Verification' }
         </h1>
 
-        <p className={styles.description}>
-          {!session && <>
-            Not signed in <br/>
-            <button onClick={() => signIn()}>Sign in</button>
-          </>}
-          {session && <>
-            Signed in as {session.user.email} <br/>
-            <button onClick={() => signOut()}>Sign out</button>
-          </>}
-        </p>
-
-        <div className={styles.grid}>
-          <a href="https://nextjs.org/docs" className={styles.card}>
-            <h2>Documentation &rarr;</h2>
-            <p>Find in-depth information about Next.js features and API.</p>
-          </a>
-
-          <a href="https://nextjs.org/learn" className={styles.card}>
-            <h2>Learn &rarr;</h2>
-            <p>Learn about Next.js in an interactive course with quizzes!</p>
-          </a>
-
-          <a
-            href="https://github.com/vercel/next.js/tree/master/examples"
-            className={styles.card}
-          >
-            <h2>Examples &rarr;</h2>
-            <p>Discover and deploy boilerplate example Next.js projects.</p>
-          </a>
-
-          <a
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className={styles.card}
-          >
-            <h2>Deploy &rarr;</h2>
-            <p>
-              Instantly deploy your Next.js site to a public URL with Vercel.
-            </p>
-          </a>
+        <div className={styles.description}>
+          {!session && 
+            <div className={styles.connectAccount} onClick={() => signIn()}>
+              <img src="./twitter_logo.svg" alt="twitter Logo" width={'auto'} height={35} />
+              <p>Conectar cuenta de Twitter</p>
+            </div>
+          }
+          {session && 
+            <div className={styles.connectAccount} onClick={() => signOut()}>
+              <img src="./twitter_logo.svg" alt="twitter Logo" width={'auto'} height={35} />
+              <p>Desconectar cuenta de Twitter</p>
+            </div>
+          }
         </div>
+
+        {
+          session &&
+          <div className={styles.grid}>
+            <div className={styles.card}>
+              <h2>Verifique su cuenta</h2>
+              <br />
+              <p>
+                Por favor, marque la casilla si está de acuerdo en verificar y validar el hash asignado a su cuenta.
+              </p>
+              <br /><br />
+              <label>
+                <input type="checkbox" checked={isChecked} onChange={handleCheckboxChange} />{' '}
+                Confirmar que la cuenta de Twitter conectada es su cuenta
+              </label>
+              <br /><br />
+              <button onClick={handleSubmitVerification} disabled={!isChecked || accountVerified || loading} className={styles.verificationButton}>
+              {
+                loading &&
+                <span>
+                  <img src="./spinner.svg" alt="spinner" width={'auto'} height={25} />
+                  Verificando cuenta
+                </span>
+              }
+              {
+                !loading && accountVerified &&
+                <span>
+                  <img src="./success.svg" alt="success" width={'auto'} height={25} />
+                  Cuenta Verificada
+                </span>
+              }
+              {
+                !loading && !accountVerified && errorVerification &&
+                <span>
+                  <img src="./error.svg" alt="success" width={'auto'} height={25} />
+                  Esta cuenta no pudo ser verificada
+                </span>
+              }
+              {
+                !loading && !accountVerified && !errorVerification &&
+                <span>
+                  Verificar Cuenta
+                </span>
+              }
+              </button>
+              {
+                !loading && !accountVerified && errorVerification &&
+                <p className={styles.errorMessage}>{errorMessage}</p>
+              }
+            </div>
+          </div>
+        }
+
       </main>
 
       <footer className={styles.footer}>
         <a
-          href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
+          href="https://www.aw3a.com/"
           target="_blank"
           rel="noopener noreferrer"
         >
           Powered by{' '}
           <span className={styles.logo}>
-            <Image src="/vercel.svg" alt="Vercel Logo" width={72} height={16} />
+            <img src="https://www.aw3a.com/svg/logo.svg" alt="AW3A Logo" width={'auto'} height={25} />
           </span>
         </a>
       </footer>
